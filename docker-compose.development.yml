@@ -33,6 +33,7 @@ services:
     build:
       context: web
     environment:
+      - API_URL=https://dev.nuxt-on-rails/api
       - HOST=0.0.0.0
     ports:
       - 80:3000

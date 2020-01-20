@@ -1,0 +1,5 @@
+v-layout
+  v-flex
+    v-list
+      v-list-item(v-for='color in colors' :key='color.id' :class='color.color' dark)
+        v-list-item-content {{color.color}}

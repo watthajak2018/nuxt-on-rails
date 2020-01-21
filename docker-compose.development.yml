@@ -1,0 +1,32 @@
+version: '3'
+
+services:
+  api:
+    build:
+      context: api
+    ports:
+      - 3000:3000
+    container_name: api
+    volumes:
+      - .:/nuxt-on-rails
+      - bundle:/bundle
+    tty: true
+    stdin_open: true
+
+  web:
+    build:
+      context: web
+    environment:
+      - HOST=0.0.0.0
+    ports:
+      - 80:3000
+    container_name: web
+    volumes:
+      - .:/nuxt-on-rails
+      - node_modules:/nuxt-on-rails/web/node_modules
+
+volumes:
+  bundle:
+    driver: local
+  node_modules:
+    driver: local

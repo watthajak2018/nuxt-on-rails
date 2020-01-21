@@ -13,7 +13,7 @@ Rails.application.configure do
   # Show full error reports.
   config.consider_all_requests_local = true
 
-  # Ensures that a master key has been made available in either ENV["RAILS_MASTER_KEY"]
+  # Ensures that a master key has been made available in either ENV['RAILS_MASTER_KEY']
   # or in config/master.key. This key is used to decrypt credentials (and other encrypted files).
   config.require_master_key = true
 
@@ -38,6 +38,8 @@ Rails.application.configure do
 
   config.action_mailer.perform_caching = false
 
+  config.logger = ActiveSupport::TaggedLogging.new ActiveSupport::Logger.new STDOUT if $PROGRAM_NAME['puma']
+
   # Print deprecation notices to the Rails logger.
   config.active_support.deprecation = :log
 
@@ -53,6 +55,9 @@ Rails.application.configure do
   # Use an evented file watcher to asynchronously detect changes in source code,
   # routes, locales, etc. This feature depends on the listen gem.
   config.file_watcher = ActiveSupport::EventedFileUpdateChecker
+
+  # Force all access to the app over SSL, use Strict-Transport-Security, and use secure cookies.
+  config.force_ssl = true
 
   config.after_initialize do
     Bullet.enable = true

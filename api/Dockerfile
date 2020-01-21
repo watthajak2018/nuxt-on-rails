@@ -36,5 +36,9 @@ COPY Gemfile .
 COPY Gemfile.lock .
 RUN bundle install -j4
 
+# Add Puma SSL certificate files.
+ADD ./keys/server.crt /home/root/.ssh/server.crt
+ADD ./keys/server.key /home/root/.ssh/server.key
+
 # Start the application server.
 CMD ["bundle", "exec", "puma", "-C", "config/puma.rb"]

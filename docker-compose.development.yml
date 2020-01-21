@@ -1,6 +1,17 @@
 version: '3'
 
 services:
+  postgres:
+    image: postgres:12.1-alpine
+    environment:
+      POSTGRES_USER: root
+      POSTGRES_PASSWORD: root
+    ports:
+      - 5432:5432
+    container_name: postgres_db
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
   api:
     build:
       context: api
@@ -12,6 +23,8 @@ services:
     volumes:
       - .:/nuxt-on-rails
       - bundle:/bundle
+    depends_on:
+      - postgres
     tty: true
     stdin_open: true
 
@@ -28,6 +41,8 @@ services:
       - node_modules:/nuxt-on-rails/web/node_modules
 
 volumes:
+  postgres_data:
+    driver: local
   bundle:
     driver: local
   node_modules:

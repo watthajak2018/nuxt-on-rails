@@ -4,6 +4,8 @@ services:
   api:
     build:
       context: api
+    environment:
+      - RAILS_MASTER_KEY
     ports:
       - 3000:3000
     container_name: api

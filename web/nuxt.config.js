@@ -13,6 +13,7 @@ module.exports = {
   loading: { color: '#3B8070' },
   buildModules: [
     '@nuxtjs/vuetify',
+    '~/modules/loaders/coffee',
     '~/modules/loaders/eslint'
   ],
   watchers: {

@@ -1,0 +1,70 @@
+div
+  section.carousel.mb-12
+    .title
+      h3 Carousels
+
+    .main.mt-6
+      v-carousel(cycle height='400' hide-delimiter-background show-arrows-on-hover)
+        v-carousel-item(v-for='(slide, index) in slides' :key='index')
+          v-sheet(:color='slide.color' height='100%')
+            v-row.fill-height(align='center' justify='center')
+              .display-3 {{ slide.title }} Slide
+
+  section.skeleton.my-10
+    .title
+      h3 Skeleton loaders
+
+    .main.mt-6
+      v-row
+        v-col(v-for='(loader, index) in skeletonLoaders' :key='index' cols='6' md='4')
+          v-sheet
+            v-skeleton-loader(:type='loader')
+
+  section.card.my-10
+    .title
+      h3 Cards
+
+    .main.mt-6
+      v-row
+        v-col
+          v-card
+            v-card-text
+              v-skeleton-loader(type='paragraph')
+
+        v-col
+          v-card
+            v-card-title Heading
+            v-card-subtitle Sub Title
+
+      v-row
+        v-col
+          v-skeleton-loader(type='image')
+          v-card-text
+            v-skeleton-loader(type='paragraph')
+
+        v-col
+          v-card
+            v-img.grey.lighten-3.text-center.align-content-center.flex-wrap(height='200px')
+              v-icon(color='grey lighten-2' size='5rem') mdi-image
+
+            v-card-title Heading
+            v-card-subtitle Sub Title
+
+      v-row
+        v-col
+          v-skeleton-loader(type='image')
+          v-card-text
+            v-skeleton-loader(type='paragraph, actions')
+
+        v-col
+          v-card
+            v-img.grey.lighten-3.text-center.align-content-center.flex-wrap(height='200px')
+              v-icon(color='grey lighten-2' size='5rem') mdi-image
+
+            v-card-title Heading
+            v-card-subtitle Sub Title
+
+            v-card-actions
+              v-spacer
+              v-btn(text color='primary') Ok
+              v-btn(text color='error') Cancle

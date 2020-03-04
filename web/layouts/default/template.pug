@@ -1,0 +1,151 @@
+v-app
+  v-app-bar(app color='white')
+    v-container
+      v-row
+        n-link(to='/')
+          v-btn.ml-3(text)
+            | Home
+
+        n-link(to='/posts')
+          v-btn.ml-3(text)
+            | Post
+
+        n-link(v-if='isAuthenticated'
+          to='/users/information')
+          v-btn.ml-3(text)
+            | My Page
+
+        v-spacer
+
+        v-btn.mr-3(color='green darken-1'
+          dark
+          rounded
+          depressed
+          v-if='!isAuthenticated && signUpButtonToggle()'
+          @click.stop='openSignInDialog')
+          | Sign In
+
+        v-btn.mr-3(dark
+          rounded
+          depressed
+          v-if='isAuthenticated'
+          @click='openSignOutDialog')
+          | Sign Out
+
+  v-content
+    v-container.py-12
+      nuxt
+
+  v-footer(dark padless)
+    v-card.flex(flat tile)
+      v-card-text.py-6.text-center
+        = '{{ new Date().getFullYear() }} — '
+        strong Copyright
+
+  v-dialog(v-model='signInDialog' persistent max-width='480')
+    v-fab-transition
+      v-card.px-8.pt-6
+        v-card-title.pa-0.headline(primary-title)
+          | Sign in
+        v-card-subtitle.pa-0.ma-0.v-messages.error--text(v-if='signInFormInvalid')
+          | {{ signInFormInvalidMessage }}
+
+        v-card-text.pa-0.mt-4
+          v-container.py-0.pb-4
+            v-form
+              v-row
+                v-text-field(label='Email'
+                  type='email'
+                  v-model='signInInput.email'
+                  :error-messages='emailErrors'
+                  required)
+
+              v-row
+                v-text-field(label='Password'
+                  type='password'
+                  v-model='signInInput.password'
+                  :error-messages='passwordErrors'
+                  :append-icon="passwordShow ? 'mdi-eye' : 'mdi-eye-off'"
+                  :type="passwordShow ? 'text' : 'password'"
+                  @click:append='passwordToggle'
+                  required)
+
+        v-card-actions.pa-0
+          v-container.text-center
+            v-row
+              v-btn(large
+                block
+                color='green darken-1'
+                :dark='!submitLoading'
+                :loading='submitLoading'
+                :disabled='submitLoading'
+                @click='signIn')
+                | Sign In
+
+            v-row
+              v-col
+                n-link(to='/users/signup')
+                  v-btn(text
+                    small
+                    rounded
+                    @click='closeSignInDialog')
+                    | Register now!
+
+            v-row
+              v-btn(icon
+                text
+                absolute
+                top
+                right
+                @click='closeSignInDialog')
+                v-icon mdi-close
+
+  v-dialog(v-model='signOutDialog' persistent max-width='480')
+    v-fab-transition
+      v-card.pa-5
+        v-card-title.px-0.pt-0.pb-2.headline(primary-title)
+          | Sign Out
+
+        v-card-text.px-0
+          | Are you sure you want to sign out?
+
+        v-card-actions.pa-0
+          v-spacer
+
+          v-btn(large
+            text
+            color='gray'
+            @click='closeSignOutDialog')
+            | Cancel
+
+          v-btn(large
+            dark
+            color='red darken-1'
+            @click='signOut')
+            | OK
+
+          v-btn(icon
+            text
+            absolute
+            top
+            right
+            @click='closeSignOutDialog')
+            v-icon mdi-close
+
+  v-snackbar(v-model='signedInSnackbar'
+    color='success')
+    | Signed In.
+
+    v-btn(dark
+      text
+      @click='closeSignedInSnackbar')
+      | Close
+
+  v-snackbar(v-model='signedOutSnackbar'
+    color='error')
+    | Signed Out.
+
+    v-btn(dark
+    text
+    @click='closeSignedOutSnackbar')
+      | Close

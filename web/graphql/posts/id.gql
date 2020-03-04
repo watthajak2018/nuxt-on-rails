@@ -1,0 +1,18 @@
+query Blogposts($id: ID!) {
+  blogpost(id: $id) {
+    id
+    title
+    bodyShort
+    body
+
+    user {
+      id
+      firstName
+      lastName
+      sexId
+      birthday
+      phoneNumber
+      email
+    }
+  }
+}

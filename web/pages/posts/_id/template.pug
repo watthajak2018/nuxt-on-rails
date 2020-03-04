@@ -1,0 +1,16 @@
+div
+  v-breadcrumbs.grey.lighten-3
+    v-breadcrumbs-item
+      n-link(to='/posts')
+        | Post
+
+    v-breadcrumbs-item(disabled)
+      v-icon.pr-3 mdi-chevron-right
+      | {{ post.title }}
+
+  div
+    .title.my-10
+      h2 {{ post.title }}
+
+    .main
+      p {{ post.body }}

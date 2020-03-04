@@ -1,0 +1,30 @@
+.title {
+  .error-message {
+    p {
+      color: #ff5252;
+      font-size: 0.6em;
+      font-weight: normal;
+      line-height: normal;
+      margin: 0.5rem 0 0;
+    }
+  }
+}
+
+.main {
+  margin-top: 0.5rem;
+}
+
+.btn, .sign-up {
+  text-align: center;
+}
+
+.sign-up {
+  .container {
+    padding-bottom: 0;
+    padding-top: 0;
+
+    p {
+      margin-bottom: 0.5rem;
+    }
+  }
+}

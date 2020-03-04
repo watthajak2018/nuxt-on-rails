@@ -1,0 +1,128 @@
+div
+  .title
+    h2 Sign Up
+
+  .main
+    v-container.px-0
+      form
+        v-row
+          v-col.py-0
+            v-text-field(label='First Name'
+              type='text'
+              v-model='signUpInput.firstName'
+              :error-messages='firstNameErrors'
+              required)
+
+        v-row
+          v-col.py-0
+            v-text-field(label='Last Name'
+              type='text'
+              v-model='signUpInput.lastName'
+              :error-messages='lastNameErrors'
+              required)
+
+        v-row
+          v-col.py-0
+            v-radio-group(v-model='signUpInput.sexId'
+              :error-messages='sexIdErrors'
+              row)
+              v-radio(v-for='(gender, index) in signUpInputSexIds'
+                :label='gender'
+                :value='gender'
+                :key='index')
+
+        v-row
+          v-col.py-0
+            v-skeleton-loader(type='sentences'
+              :loading='formLoading'
+              transition='scale-transition')
+
+              v-menu(v-model='birthdayStatus'
+                min-width='290px'
+                offset-y
+                lazy
+                transition='scale-transition'
+                :close-on-content-click='false')
+
+                template(v-slot:activator='{ on }')
+                  v-text-field(label='Birthday'
+                    :error-messages='birthdayErrors'
+                    v-model='signUpInput.birthday'
+                    readonly
+                    v-on='on')
+
+                v-date-picker(ref='picker'
+                  v-model='signUpInput.birthday'
+                  no-title
+                  :max="new Date().toISOString().substr(0, 10)"
+                  min="1950-01-01"
+                  @input='birthdayToggle')
+
+        v-row
+          v-col.pt-0
+            v-text-field(label='Phone Number'
+              v-model='signUpInput.phoneNumber'
+              v-mask='phoneNumberMask'
+              hint='example: xxx-xxx-xxxx'
+              persistent-hint
+              :error-messages='phoneNumberErrors'
+              required)
+
+        v-row
+          v-col.py-0
+            v-text-field(label='Email'
+              type='email'
+              v-model='signUpInput.email'
+              :error-messages="emailErrors.length == 0 ? emailGraphQLErrors : emailErrors"
+              required)
+
+        v-row
+          v-col.py-0
+            v-text-field(label='Password'
+              type='password'
+              v-model='signUpInput.password'
+              hint='Must be at least 8 characters.'
+              persistent-hint
+              :error-messages='passwordErrors'
+              :append-icon="passwordStatus ? 'mdi-eye' : 'mdi-eye-off'"
+              :type="passwordStatus ? 'text' : 'password'"
+              @click:append='passwordToggle'
+              required)
+
+        v-row
+          v-col.py-0
+            v-text-field(label='Confirm Password'
+              type='password'
+              v-model='signUpInput.passwordConfirmation'
+              :error-messages="passwordConfirmationErrors.length == 0 ? passwordConfirmationGraphQLErrors : passwordConfirmationErrors"
+              :append-icon="passwordConfirmationStatus ? 'mdi-eye' : 'mdi-eye-off'"
+              :type="passwordConfirmationStatus ? 'text' : 'password'"
+              @click:append='passwordConfirmationToggle'
+              required)
+
+        v-row
+          v-col.py-0
+            v-select(label='Role'
+              v-model='signUpInput.role'
+              :items='signUpInputRoles'
+              :error-messages='roleErrors')
+
+    v-container.text-center
+      v-row
+        v-btn(large
+          block
+          color='green darken-1'
+          :dark='!submitLoading'
+          :loading='submitLoading'
+          :disabled='submitLoading'
+          @click='submitSignUpForm')
+          | Sign Up
+
+      v-row
+        v-col
+          p.my-2
+            | Already have an account?
+
+          n-link(to='/users/signin')
+            v-btn(text small rounded)
+              | Let's sign in

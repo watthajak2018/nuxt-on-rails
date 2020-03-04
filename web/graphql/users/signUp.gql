@@ -1,0 +1,25 @@
+mutation userSignUp(
+  $firstName: String!,
+  $lastName: String!,
+  $sexId: String!,
+  $birthday: String!,
+  $phoneNumber: String!,
+  $email: String!,
+  $password: String!,
+  $passwordConfirmation: String!
+  $role: String!
+) {
+  userSignUp(input: {
+    firstName: $firstName,
+    lastName: $lastName,
+    sexId: $sexId,
+    birthday: $birthday,
+    phoneNumber: $phoneNumber,
+    email: $email,
+    password: $password,
+    passwordConfirmation: $passwordConfirmation,
+    role: $role
+  }) {
+    accessToken: token
+  }
+}

@@ -42,6 +42,7 @@
     "vue-property-decorator": "^8.4.0",
     "vue-server-renderer": "^2.6.11",
     "vue-template-compiler": "^2.6.11",
+    "vue-the-mask": "^0.11.1",
     "vuelidate": "^0.7.5",
     "webpack": "^4.42.0"
   }

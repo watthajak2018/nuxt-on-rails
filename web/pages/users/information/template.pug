@@ -1,0 +1,81 @@
+div
+  .title.text-center.text-uppercase
+    h2 My Page
+
+  .main.mt-10
+    v-list.mx-auto(max-width='480')
+      v-list-item.two-line.name
+        v-list-item-icon
+          v-icon mdi-account
+
+        v-list-item-content
+          v-list-item-title
+            | {{ currentUser.firstName }} {{ currentUser.lastName }}
+
+          v-list-item-subtitle
+            | Name
+
+      v-divider(inset)
+
+      v-list-item.two-line.gender
+        v-list-item-icon
+          v-icon mdi-gender-{{ currentUser.sexId }}
+
+        v-list-item-content
+          v-list-item-title
+            | {{ currentUser.sexId }}
+
+          v-list-item-subtitle
+            | Gender
+
+      v-divider(inset)
+
+      v-list-item.two-line.birthday
+        v-list-item-icon
+          v-icon mdi-cake-variant
+
+        v-list-item-content
+          v-list-item-title
+            | {{ currentUser.birthday }}
+
+          v-list-item-subtitle
+            | Birthday
+
+      v-divider(inset)
+
+      v-list-item.two-line.phone-number
+        v-list-item-icon
+          v-icon mdi-cellphone
+
+        v-list-item-content
+          v-list-item-title
+            | {{ currentUser.phoneNumber }}
+
+          v-list-item-subtitle
+            | Phone Number
+
+      v-divider(inset)
+
+      v-list-item.two-line.email
+        v-list-item-icon
+          v-icon mdi-email
+
+        v-list-item-content
+          v-list-item-title
+            | {{ currentUser.email }}
+
+          v-list-item-subtitle
+            | Email
+
+      v-divider(inset)
+
+      v-list-item.two-line.role
+        v-list-item-icon
+          v-icon mdi-account-box
+
+        v-list-item-content
+          v-list-item-title
+            | {{ currentUser.role }}
+
+          v-list-item-subtitle
+            | Role

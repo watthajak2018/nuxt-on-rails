@@ -1,0 +1,11 @@
+query userInformation($token: String!) {
+  userInformation(token: $token) {
+    firstName
+    lastName
+    sexId
+    birthday
+    phoneNumber
+    email
+    role
+  }
+}

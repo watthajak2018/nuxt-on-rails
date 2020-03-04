@@ -96,6 +96,9 @@ export default
       }
 
   computed:
+    passwordShow: ->
+      @$store.getters['auth/passwordShow']
+
     firstNameErrors: ->
       errors = []
       return errors if !@$v.signUpInput.firstName.$dirty
@@ -162,7 +165,7 @@ export default
       @birthdayStatus = !@birthdayStatus
 
     passwordToggle: ->
-      @passwordStatus = !@passwordStatus
+      @$store.dispatch 'auth/passwordToggle'
 
     passwordConfirmationToggle: ->
       @passwordConfirmationStatus = !@passwordConfirmationStatus

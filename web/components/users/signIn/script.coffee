@@ -25,6 +25,9 @@ export default
     passwordShow: ->
       @$store.getters['auth/passwordShow']
 
+    refererRouteName: ->
+      @$store.getters['auth/refererRouteName']
+
     signInFormInvalid: ->
       @$store.getters['auth/signInFormInvalid']
 
@@ -64,4 +67,3 @@ export default
       unless @$v.$invalid
         @$store.dispatch 'auth/signIn', @$v.signInInput.$model
         @clearSignInForm()
-        @$store.getters['auth/isAuthenticated'] && @$router.push '/'

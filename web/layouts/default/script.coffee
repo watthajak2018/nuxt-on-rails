@@ -48,11 +48,19 @@ export default
     submitLoading: ->
       @$store.getters['auth/submitLoading']
 
-    signedInSnackbar: ->
-      @$store.getters['auth/signedInSnackbar']
+    signedInSnackbar:
+      get: ->
+        @$store.getters['auth/signedInSnackbar']
 
-    signedOutSnackbar: ->
-      @$store.getters['auth/signedOutSnackbar']
+      set: ->
+        @$store.getters['auth/signedInSnackbar']
+
+    signedOutSnackbar:
+      get: ->
+        @$store.getters['auth/signedOutSnackbar']
+
+      set: ->
+        @$store.getters['auth/signedOutSnackbar']
 
     emailErrors: ->
       errors = []
@@ -71,7 +79,7 @@ export default
 
   methods:
     signUpButtonToggle: ->
-     !@disableSignUpButtonRouteNames.includes @$route.name
+      !@disableSignUpButtonRouteNames.includes @$route.name
 
     openSignInDialog: ->
       @$store.dispatch 'auth/openSignInDialog'
@@ -109,3 +117,8 @@ export default
 
     signOut: ->
       @$store.dispatch 'auth/signOut'
+
+  watch:
+    $route: ->
+      @$store.dispatch 'auth/closeSignedInSnackbar'
+      @$store.dispatch 'auth/closeSignedOutSnackbar'

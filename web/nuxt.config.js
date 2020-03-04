@@ -15,14 +15,21 @@ module.exports = {
     '@nuxtjs/apollo',
     '@nuxtjs/vuetify',
     '~/modules/loaders/coffee',
-    '~/modules/loaders/eslint'
+    '~/modules/loaders/eslint',
+    'cookie-universal-nuxt'
   ],
+  plugins: [
+    '~/plugins/nuxt-client-init'
+  ],
+  vuetify: {
+    optionsPath: './vuetify/options.js'
+  },
   apollo: {
     tokenName: 'nuxt-on-rails-token',
     clientConfigs: {
       default: {
         httpEndpoint: process.env.GRAPHQL_URL
-      },
+      }
     }
   },
   watchers: {

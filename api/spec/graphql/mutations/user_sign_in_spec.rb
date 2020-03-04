@@ -27,6 +27,7 @@ RSpec.describe Mutations::UserSignIn, type: :request do
     it "returns 'accessToken'" do
       mutation = ApiSchema.execute mutation_string, variables: variables
       expect(mutation['data']['userSignIn']['accessToken']).not_to be_nil
+      expect(mutation['errors']).to be_nil
     end
   end
 
@@ -35,7 +36,8 @@ RSpec.describe Mutations::UserSignIn, type: :request do
       it "return 'userSignIn' as null" do
         variables['email'] = nil
         mutation = ApiSchema.execute mutation_string, variables: variables
-        expect(mutation['data']['userSignIn']).to be_nil
+        expect(mutation['data']).to be_nil
+        expect(mutation['errors']).not_to be_nil
       end
     end
 
@@ -43,7 +45,8 @@ RSpec.describe Mutations::UserSignIn, type: :request do
       it "return 'userSignIn' as null" do
         variables['password'] = nil
         mutation = ApiSchema.execute mutation_string, variables: variables
-        expect(mutation['data']['userSignIn']).to be_nil
+        expect(mutation['data']).to be_nil
+        expect(mutation['errors']).not_to be_nil
       end
     end
 
@@ -52,7 +55,8 @@ RSpec.describe Mutations::UserSignIn, type: :request do
         variables['email'] = nil
         variables['password'] = nil
         mutation = ApiSchema.execute mutation_string, variables: variables
-        expect(mutation['data']['userSignIn']).to be_nil
+        expect(mutation['data']).to be_nil
+        expect(mutation['errors']).not_to be_nil
       end
     end
 
@@ -61,6 +65,7 @@ RSpec.describe Mutations::UserSignIn, type: :request do
         variables['email'] = 'unknown@example.com'
         mutation = ApiSchema.execute mutation_string, variables: variables
         expect(mutation['data']['userSignIn']).to be_nil
+        expect(mutation['errors']).not_to be_nil
       end
     end
 
@@ -68,7 +73,8 @@ RSpec.describe Mutations::UserSignIn, type: :request do
       it "does not return 'accessToken'" do
         variables['password'] = 'WrongPassword'
         mutation = ApiSchema.execute mutation_string, variables: variables
-        expect(mutation['data']['userSignIn']['accessToken']).to be_nil
+        expect(mutation['data']['userSignIn']).to be_nil
+        expect(mutation['errors']).not_to be_nil
       end
     end
   end

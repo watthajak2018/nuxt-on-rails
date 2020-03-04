@@ -28,8 +28,7 @@
 class User < ApplicationRecord
   include Devise::JWT::RevocationStrategies::JTIMatcher
 
-  devise :database_authenticatable,
-         :jwt_authenticatable, jwt_revocation_strategy: JwtBlacklist
+  devise :database_authenticatable, :jwt_authenticatable, jwt_revocation_strategy: self
 
   has_many :blogposts, dependent: :destroy
 
@@ -50,10 +49,6 @@ class User < ApplicationRecord
   validates :email, presence: true
   validates :email, format: { with: Devise.email_regexp }, allow_blank: true
   validates :email, uniqueness: true
-
-  validates :password, presence: true
-  validates :password, length: { within: Devise.password_length }, allow_blank: true
-  validates :password, confirmation: true
 
   validates :role, presence: true
   validates :role, inclusion: { in: roles.keys }, allow_blank: true

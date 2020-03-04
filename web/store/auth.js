@@ -53,14 +53,17 @@ export const getters = {
   isAuthenticated(state) {
     return !!state.accessToken
   },
-  isLoggedIn(state) {
-    return !!(state.currentUser && state.accessToken)
-  },
   currentUser(state) {
     return state.currentUser || {}
   },
+  isLoggedIn(state) {
+    return !!(state.currentUser && state.accessToken)
+  },
   passwordShow(state) {
     return !!state.passwordShow
+  },
+  refererRouteName(state) {
+    return state.refererRouteName
   },
   signedInSnackbar(state) {
     return !!state.signedInSnackbar
@@ -89,8 +92,7 @@ export const actions = {
   async init({ commit, dispatch }) {
     if (!process.server) return
     const accessToken = this.app.$apolloHelpers.getToken()
-    commit('SET_ACCESS_TOKEN', accessToken)
-    await dispatch('currentUser')
+    accessToken ? commit('SET_ACCESS_TOKEN', accessToken) : dispatch('signOut')
   },
 
   async currentUser({ commit, dispatch }) {
@@ -104,16 +106,12 @@ export const actions = {
         userInformation = res.data.userInformation || {}
 
       commit('SET_CURRENT_USER', userInformation)
-      console.error('OK')
     } catch (error) {
-      console.error(error)
-      // dispatch('signOut')
-      // dispatch('openSignedOutSnackbar')
+      dispatch('signOut')
     }
   },
 
   async openSignInDialog ({ commit }) {
-    commit('SET_SIGNED_IN_SNACK_BAR', false)
     commit('SET_SIGNED_OUT_SNACK_BAR', false)
     commit('SET_SIGN_IN_DIALOG', true)
   },
@@ -124,7 +122,6 @@ export const actions = {
 
   async openSignOutDialog ({ commit }) {
     commit('SET_SIGNED_IN_SNACK_BAR', false)
-    commit('SET_SIGNED_OUT_SNACK_BAR', false)
     commit('SET_SIGN_OUT_DIALOG', true)
   },
 
@@ -142,7 +139,8 @@ export const actions = {
       const
         client = this.app.apolloProvider.defaultClient,
         res = await client.mutate({ mutation: userSignInMutation, variables: variables }),
-        accessToken = res.data.userSignIn.accessToken
+        accessToken = res.data.userSignIn.accessToken,
+        refererRouteName = this.$cookies.get('referer-route-name')
 
       this.$apolloHelpers.onLogin(accessToken)
       commit('SET_ACCESS_TOKEN', accessToken)
@@ -150,6 +148,9 @@ export const actions = {
       dispatch('currentUser')
       dispatch('openSignedInSnackbar')
       dispatch('closeSignInDialog')
+      dispatch('closeSignInDialog')
+      this.$router.push({ name: refererRouteName })
+      dispatch('removeRefererRouteName')
     } catch (error) {
       commit('SET_SIGN_IN_FORM_INVALID', true)
       commit('SET_SIGN_IN_FORM_INVALID_MESSAGE', error.graphQLErrors[0].message)
@@ -179,7 +180,16 @@ export const actions = {
   async signOut ({ commit, dispatch }) {
     this.$apolloHelpers.onLogout()
     commit('SET_ACCESS_TOKEN', null)
+    commit('SET_CURRENT_USER', null)
     dispatch('closeSignOutDialog')
     dispatch('openSignedOutSnackbar')
+  },
+
+  async setRefererRouteName (store, refererRouteName) {
+    this.$cookies.set('referer-route-name', refererRouteName)
+  },
+
+  async removeRefererRouteName () {
+    this.$cookies.remove('referer-route-name')
   }
 }

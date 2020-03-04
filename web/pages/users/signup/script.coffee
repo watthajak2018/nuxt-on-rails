@@ -5,3 +5,11 @@ export default
 
   components:
     'user-sing-up': userSingUpComponent
+
+  computed:
+    isLoggedIn: ->
+      @$store.getters['auth/isLoggedIn']
+
+  watch:
+    isLoggedIn: ->
+      @isLoggedIn && @$router.push '/'

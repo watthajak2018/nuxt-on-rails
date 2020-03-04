@@ -2,12 +2,12 @@ export default
   middleware: 'authenticated'
 
   computed:
+    isLoggedIn: ->
+      @$store.getters['auth/isLoggedIn']
+
     currentUser: ->
       @$store.getters['auth/currentUser']
 
-  methods:
-    loadCurrentUser: ->
-      @$store.dispatch 'auth/currentUser'
-
-  mounted: ->
-#     @loadCurrentUser()
+  watch:
+    isLoggedIn: ->
+      @isLoggedIn || @$router.push '/'

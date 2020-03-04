@@ -1,0 +1,41 @@
+div
+  .title
+    h2 Sign In
+
+    .error-message(v-if='signInFormInvalid')
+      p {{ signInFormInvalidMessage }}
+
+  .main
+    .form
+      v-container
+        v-form
+          v-row
+            v-text-field(label='Email'
+              type='email'
+              v-model='signInInput.email'
+              :error-messages='emailErrors'
+              required)
+
+          v-row
+            v-text-field(label='Password'
+              type='password'
+              v-model='signInInput.password'
+              :error-messages='passwordErrors'
+              :append-icon="passwordShow ? 'mdi-eye' : 'mdi-eye-off'"
+              :type="passwordShow ? 'text' : 'password'"
+              @click:append='passwordToggle'
+              required)
+
+    .btn
+      v-container
+        v-row
+          v-btn(large
+            block
+            color='green darken-1'
+            :dark='!submitLoading'
+            :loading='submitLoading'
+            :disabled='submitLoading'
+            @click='signIn')
+            | Sign In
+
+    .sign-up

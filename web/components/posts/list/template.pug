@@ -1,0 +1,21 @@
+v-row
+  v-col(v-for='(post, index) in posts' :key='index' xs='6' md='4')
+    n-link(:to='`posts/${post.id}`')
+      v-hover(v-slot:default='{ hover }')
+        v-card(outlined :elevation='hover ? 16 : 2')
+          v-lazy(v-model='isActive' :options='{ threshold: .5 }' transition='fade-transition')
+            v-img(src='https://cdn.vuetifyjs.com/images/cards/sunshine.jpg'
+              :alt='`${post.title}`' aspect-ratio='2' max-height='200px')
+
+          v-list-item(three-line)
+            v-list-item-content
+              v-list-item-title.headline.mb-1 {{ post.title }}
+              v-list-item-subtitle {{ post.bodyShort }}
+
+          v-divider
+
+          v-list-item
+            v-list-item-avatar.grey.darken-3
+              v-lazy(v-model='isActive' :options='{ threshold: .5 }' transition='fade-transition')
+                v-img.elevation-6
+            v-list-item-content {{ post.user.name }}

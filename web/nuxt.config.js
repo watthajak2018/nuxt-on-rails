@@ -12,10 +12,19 @@ module.exports = {
   },
   loading: { color: '#3B8070' },
   buildModules: [
+    '@nuxtjs/apollo',
     '@nuxtjs/vuetify',
     '~/modules/loaders/coffee',
     '~/modules/loaders/eslint'
   ],
+  apollo: {
+    tokenName: 'nuxt-on-rails-token',
+    clientConfigs: {
+      default: {
+        httpEndpoint: process.env.GRAPHQL_URL
+      },
+    }
+  },
   watchers: {
     webpack: {
       aggregateTimeout: 300,

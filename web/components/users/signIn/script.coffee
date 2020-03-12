@@ -22,8 +22,11 @@ export default
     }
 
   computed:
-    passwordShow: ->
-      @$store.getters['auth/passwordShow']
+    passwordIcon: ->
+      @$store.getters['auth/passwordIcon']
+
+    passwordType: ->
+      @$store.getters['auth/passwordType']
 
     refererRouteName: ->
       @$store.getters['auth/refererRouteName']

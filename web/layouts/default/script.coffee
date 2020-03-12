@@ -36,8 +36,11 @@ export default
     signOutDialog: ->
       @$store.getters['auth/signOutDialog']
 
-    passwordShow: ->
-      @$store.getters['auth/passwordShow']
+    passwordIcon: ->
+      @$store.getters['auth/passwordIcon']
+
+    passwordType: ->
+      @$store.getters['auth/passwordType']
 
     signInFormInvalid: ->
       @$store.getters['auth/signInFormInvalid']
@@ -117,6 +120,8 @@ export default
 
     signOut: ->
       @$store.dispatch 'auth/signOut'
+      @closeSignOutDialog()
+      @openSignedOutSnackbar()
 
   watch:
     $route: ->

@@ -65,8 +65,8 @@ v-app
                   type='password'
                   v-model='signInInput.password'
                   :error-messages='passwordErrors'
-                  :append-icon="passwordShow ? 'mdi-eye' : 'mdi-eye-off'"
-                  :type="passwordShow ? 'text' : 'password'"
+                  :append-icon='passwordIcon'
+                  :type='passwordType'
                   @click:append='passwordToggle'
                   required)
 

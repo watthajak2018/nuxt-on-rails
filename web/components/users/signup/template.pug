@@ -35,7 +35,7 @@ div
           v-row
             v-col.py-0
               v-skeleton-loader(type='sentences'
-                :loading='formLoading'
+                :loading='birthdayLoading'
                 transition='scale-transition')
 
                 v-menu(v-model='birthdayStatus'
@@ -85,8 +85,8 @@ div
                 hint='Must be at least 8 characters.'
                 persistent-hint
                 :error-messages='passwordErrors'
-                :append-icon="passwordShow ? 'mdi-eye' : 'mdi-eye-off'"
-                :type="passwordShow ? 'text' : 'password'"
+                :append-icon='passwordIcon'
+                :type='passwordType'
                 @click:append='passwordToggle'
                 required)
 
@@ -96,8 +96,8 @@ div
                 type='password'
                 v-model='signUpInput.passwordConfirmation'
                 :error-messages="passwordConfirmationErrors.length == 0 ? passwordConfirmationGraphQLErrors : passwordConfirmationErrors"
-                :append-icon="passwordConfirmationStatus ? 'mdi-eye' : 'mdi-eye-off'"
-                :type="passwordConfirmationStatus ? 'text' : 'password'"
+                :append-icon='passwordConfirmationIcon'
+                :type='passwordConfirmationType'
                 @click:append='passwordConfirmationToggle'
                 required)
 

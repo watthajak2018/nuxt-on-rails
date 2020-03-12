@@ -1,0 +1,5 @@
+mutation userSignOut($token: String!) {
+  userSignOut(input: { token: $token }) {
+    clientMutationId
+  }
+}

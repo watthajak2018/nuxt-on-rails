@@ -1,7 +1,6 @@
 import { validationMixin } from 'vuelidate'
 import { email, minLength, maxLength, required, sameAs } from 'vuelidate/lib/validators'
 import { mask } from 'vue-the-mask'
-import userSignUpMutation from '~/graphql/users/signUp.gql'
 
 export default
   inject: ['theme']
@@ -38,14 +37,9 @@ export default
     birthdayStatus: false
     phoneNumberMask: '###-###-####'
     emailGraphQLErrors: []
-    passwordStatus: false
-    passwordConfirmationStatus: false
     passwordConfirmationGraphQLErrors: []
 
-    formLoading: true
     signUpFormErrors: null
-    submitLoader: null
-    submitLoading: false
 
   validations:
     signUpInput:
@@ -96,8 +90,23 @@ export default
       }
 
   computed:
-    passwordShow: ->
-      @$store.getters['auth/passwordShow']
+    birthdayLoading: ->
+      @$store.getters['auth/birthdayLoading']
+
+    passwordIcon: ->
+      @$store.getters['auth/passwordIcon']
+
+    passwordType: ->
+      @$store.getters['auth/passwordType']
+
+    passwordConfirmationIcon: ->
+      @$store.getters['auth/passwordConfirmationIcon']
+
+    passwordConfirmationType: ->
+      @$store.getters['auth/passwordConfirmationType']
+
+    submitLoading: ->
+      @$store.getters['auth/submitLoading']
 
     firstNameErrors: ->
       errors = []
@@ -161,6 +170,9 @@ export default
       errors
 
   methods:
+    birthdayLoaded: ->
+      @$store.dispatch 'auth/birthdayLoaded'
+
     birthdayToggle: ->
       @birthdayStatus = !@birthdayStatus
 
@@ -168,10 +180,7 @@ export default
       @$store.dispatch 'auth/passwordToggle'
 
     passwordConfirmationToggle: ->
-      @passwordConfirmationStatus = !@passwordConfirmationStatus
-
-    formLoaded: ->
-      @formLoading = false
+      @$store.dispatch 'auth/passwordConfirmationToggle'
 
     signUpButtonToggle: ->
       !@disableSignUpButtonRouteNames.includes @$route.name
@@ -180,41 +189,12 @@ export default
       @$v.$touch()
 
       unless @$v.$invalid
-        @submitLoader = 'submitLoading'
-        @mutateSignUpForm()
-
-      @emailGraphQLErrors = []
-      @passwordConfirmationGraphQLErrors = []
-
-    mutateSignUpForm: ->
-      try
-        res = await @$apollo.mutate mutation: userSignUpMutation, variables: @$v.signUpInput.$model
-        @signUp(res.data.userCreate.accessToken)
-        @signUpFormLoaded()
-
-      catch error
-        @signUpFormLoaded()
-        errorMessages = JSON.parse(error.graphQLErrors[0].message)
-        errorMessages.email && @emailGraphQLErrors = errorMessages.email
-        errorMessages.password_confirmation && @passwordConfirmationGraphQLErrors = errorMessages.password_confirmation
-
-    signUpFormLoaded: ->
-      @submitLoading = false
-      @submitLoader = null
-
-    signUp: (accessToken) ->
-      this.$apolloHelpers.onLogin accessToken
-      @$store.commit 'SET_ACCESS_TOKEN', accessToken
-      @$router.push '/users/information'
+        @$store.dispatch 'auth/signUp', @$v.signUpInput.$model
 
   mounted: ->
-    @formLoaded()
+    @birthdayLoaded()
 
   watch:
     birthdayStatus: (val) ->
       val && setTimeout =>
         @$refs.picker.activePicker = 'YEAR'
-
-    submitLoader: ->
-      submitLoader = @submitLoader
-      @[submitLoader] = !@[submitLoader]

@@ -1,11 +1,14 @@
 import userInformationQuery from '~/graphql/users/information.gql'
 import userSignInMutation from '~/graphql/users/signIn.gql'
+import userSignUpMutation from '~/graphql/users/signUp.gql'
 
 export const state = () => {
   return {
     accessToken: null,
+    birthdayLoading: true,
     currentUser: null,
     passwordShow: false,
+    passwordConfirmationShow: false,
     signedInSnackbar: false,
     signedOutSnackbar: false,
     signInDialog: false,
@@ -20,11 +23,17 @@ export const mutations = {
   SET_ACCESS_TOKEN: (state, accessToken) => {
     state.accessToken = accessToken
   },
+  SET_BIRTHDAY_LOADING: (state, birthdayLoading) => {
+    state.birthdayLoading = birthdayLoading
+  },
   SET_CURRENT_USER: (state, currentUser) => {
     state.currentUser = currentUser
   },
   SET_PASSWORD_SHOW: (state) => {
     state.passwordShow = !state.passwordShow
+  },
+  SET_PASSWORD_CONFIRMATION_SHOW: (state) => {
+    state.passwordConfirmationShow = !state.passwordConfirmationShow
   },
   SET_SIGN_IN_DIALOG: (state, signInDialog) => {
     state.signInDialog = signInDialog
@@ -59,8 +68,20 @@ export const getters = {
   isLoggedIn(state) {
     return !!(state.currentUser && state.accessToken)
   },
-  passwordShow(state) {
-    return !!state.passwordShow
+  birthdayLoading(state) {
+    return !!state.birthdayLoading
+  },
+  passwordIcon(state) {
+    return state.passwordShow ? 'mdi-eye' : 'mdi-eye-off'
+  },
+  passwordType(state) {
+    return state.passwordShow ? 'text' : 'password'
+  },
+  passwordConfirmationIcon(state) {
+    return state.passwordConfirmationShow ? 'mdi-eye' : 'mdi-eye-off'
+  },
+  passwordConfirmationType(state) {
+    return state.passwordConfirmationShow ? 'text' : 'password'
   },
   refererRouteName(state) {
     return state.refererRouteName
@@ -81,7 +102,7 @@ export const getters = {
     return !!state.signInFormInvalid
   },
   signInFormInvalidMessage(state) {
-    return state.signInFormInvalid
+    return !!state.signInFormInvalid
   },
   submitLoading(state) {
     return !!state.submitLoading
@@ -111,29 +132,63 @@ export const actions = {
     }
   },
 
-  async openSignInDialog ({ commit }) {
+  async birthdayLoaded({ commit }) {
+    commit('SET_BIRTHDAY_LOADING', false)
+  },
+
+  async birthdayToggle({ commit }) {
+    commit('SET_BIRTHDAY_STATUS')
+  },
+
+  async signUp({ commit, dispatch }, variables) {
+    commit('SET_SUBMIT_LOADING', true)
+    try {
+      const
+        client = this.app.apolloProvider.defaultClient,
+        res = await client.mutate({ mutation: userSignUpMutation, variables: variables }),
+        accessToken = res.data.userSignIn.accessToken,
+        refererRouteName = this.$cookies.get('referer-route-name')
+
+      this.$apolloHelpers.onLogin(accessToken)
+      commit('SET_ACCESS_TOKEN', accessToken)
+      dispatch('currentUser')
+      dispatch('openSignedInSnackbar')
+      this.$router.push({ name: refererRouteName })
+      dispatch('removeRefererRouteName')
+    } catch (error) {
+
+    } finally {
+      commit('SET_SUBMIT_LOADING', false)
+    }
+  },
+
+  async openSignInDialog({ commit }) {
     commit('SET_SIGNED_OUT_SNACK_BAR', false)
     commit('SET_SIGN_IN_DIALOG', true)
   },
 
-  async closeSignInDialog ({ commit }) {
+  async closeSignInDialog({ commit }) {
     commit('SET_SIGN_IN_DIALOG', false)
   },
 
-  async openSignOutDialog ({ commit }) {
+  async openSignOutDialog({ commit }) {
     commit('SET_SIGNED_IN_SNACK_BAR', false)
     commit('SET_SIGN_OUT_DIALOG', true)
   },
 
-  async closeSignOutDialog ({ commit }) {
+  async closeSignOutDialog({ commit }) {
     commit('SET_SIGN_OUT_DIALOG', false)
   },
 
-  async passwordToggle ({ commit }) {
+  async passwordToggle({ commit }) {
     commit('SET_PASSWORD_SHOW')
   },
 
-  async signIn ({ commit, dispatch }, variables) {
+  async passwordConfirmationToggle({ commit }) {
+    commit('SET_PASSWORD_CONFIRMATION_SHOW')
+  },
+
+  async signIn({ commit, dispatch }, variables) {
     commit('SET_SUBMIT_LOADING', true)
     try {
       const
@@ -148,7 +203,6 @@ export const actions = {
       dispatch('currentUser')
       dispatch('openSignedInSnackbar')
       dispatch('closeSignInDialog')
-      dispatch('closeSignInDialog')
       this.$router.push({ name: refererRouteName })
       dispatch('removeRefererRouteName')
     } catch (error) {
@@ -159,37 +213,35 @@ export const actions = {
     }
   },
 
-  async openSignedInSnackbar ({ commit }) {
+  async openSignedInSnackbar({ commit }) {
     commit('SET_SIGNED_OUT_SNACK_BAR', false)
     commit('SET_SIGNED_IN_SNACK_BAR', true)
   },
 
-  async openSignedOutSnackbar ({ commit }) {
+  async openSignedOutSnackbar({ commit }) {
     commit('SET_SIGNED_IN_SNACK_BAR', false)
     commit('SET_SIGNED_OUT_SNACK_BAR', true)
   },
 
-  async closeSignedInSnackbar ({ commit }) {
+  async closeSignedInSnackbar({ commit }) {
     commit('SET_SIGNED_IN_SNACK_BAR', false)
   },
 
-  async closeSignedOutSnackbar ({ commit }) {
+  async closeSignedOutSnackbar({ commit }) {
     commit('SET_SIGNED_OUT_SNACK_BAR', false)
   },
 
-  async signOut ({ commit, dispatch }) {
+  async signOut({ commit }) {
     this.$apolloHelpers.onLogout()
     commit('SET_ACCESS_TOKEN', null)
     commit('SET_CURRENT_USER', null)
-    dispatch('closeSignOutDialog')
-    dispatch('openSignedOutSnackbar')
   },
 
-  async setRefererRouteName (store, refererRouteName) {
+  async setRefererRouteName(store, refererRouteName) {
     this.$cookies.set('referer-route-name', refererRouteName)
   },
 
-  async removeRefererRouteName () {
+  async removeRefererRouteName() {
     this.$cookies.remove('referer-route-name')
   }
 }
